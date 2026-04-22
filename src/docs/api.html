@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Documentation</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #f5f5f5;
+        color: #333;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        background: #1a1a2e;
+        color: #fff;
+        overflow-y: auto;
+        padding: 20px;
+      }
+      .sidebar h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+      }
+      .sidebar a {
+        display: block;
+        color: #aaa;
+        text-decoration: none;
+        padding: 8px 0;
+        font-size: 14px;
+      }
+      .sidebar a:hover {
+        color: #fff;
+      }
+      .sidebar a.active {
+        color: #4caf50;
+      }
+      .main {
+        margin-left: 260px;
+        padding: 40px;
+        max-width: 1000px;
+      }
+      .endpoint {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .method {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 12px;
+        margin-right: 10px;
+      }
+      .GET {
+        background: #61affe;
+        color: #fff;
+      }
+      .POST {
+        background: #49cc90;
+        color: #fff;
+      }
+      .PUT {
+        background: #fca130;
+        color: #fff;
+      }
+      .DELETE {
+        background: #f93e3e;
+        color: #fff;
+      }
+      .path {
+        font-family: monospace;
+        font-size: 16px;
+        color: #333;
+      }
+      .description {
+        margin: 10px 0;
+        color: #666;
+        font-size: 14px;
+      }
+      .auth {
+        display: inline-block;
+        background: #ff9800;
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+      }
+      .admin {
+        background: #e91e63;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+      }
+      th {
+        background: #f9f9f9;
+        font-weight: 600;
+      }
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .section-title {
+        font-size: 28px;
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #333;
+      }
+      .tag {
+        font-size: 22px;
+        margin: 30px 0 15px;
+        color: #1a1a2e;
+      }
+      .req-body {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .req-body pre {
+        margin: 0;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>📚 API Docs</h2>
+      <a href="#auth">Auth</a>
+      <a href="#users">Users</a>
+      <a href="#categories">Categories</a>
+      <a href="#products">Products</a>
+      <a href="#cart">Cart</a>
+      <a href="#orders">Orders</a>
+    </div>
+
+    <div class="main">
+      <h1 class="section-title">API Documentation</h1>
+      <p style="margin-bottom: 30px; color: #666">
+        Base URL: <code>http://localhost:5000/api</code>
+      </p>
+
+      <div class="tag" id="auth">🔐 Auth</div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/register</span>
+        <span class="auth">Public</span>
+        <div class="description">Register a new user</div>
+        <div class="req-body">
+          <pre>
+{ "fname": "string", "lname": "string", "email": "string", "password": "string" }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/login</span>
+        <span class="auth">Public</span>
+        <div class="description">Login user</div>
+        <div class="req-body">
+          <pre>{ "email": "string", "password": "string" }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/forgot-password</span>
+        <span class="auth">Public</span>
+        <div class="description">Request password reset</div>
+        <div class="req-body"><pre>{ "email": "string" }</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/verify-otp</span>
+        <span class="auth">Public</span>
+        <div class="description">Verify OTP for password reset</div>
+        <div class="req-body">
+          <pre>{ "email": "string", "otp": "string" }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/reset-password</span>
+        <span class="auth">Public</span>
+        <div class="description">Reset password using reset token</div>
+        <div class="req-body">
+          <pre>{ "resetToken": "string", "newPassword": "string" }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/auth/profile</span>
+        <span class="auth">User</span>
+        <div class="description">Get current user profile</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/auth/profile</span>
+        <span class="auth">User</span>
+        <div class="description">Update user profile</div>
+        <div class="req-body">
+          <pre>{ "fname": "string", "lname": "string" }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/auth/password</span>
+        <span class="auth">User</span>
+        <div class="description">Change password</div>
+        <div class="req-body">
+          <pre>{ "currentPassword": "string", "newPassword": "string" }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/verify-email</span>
+        <span class="auth">User</span>
+        <div class="description">Verify email with OTP</div>
+        <div class="req-body"><pre>{ "otp": "string" }</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/resend-verification</span>
+        <span class="auth">User</span>
+        <div class="description">Resend verification OTP</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/auth/logout</span>
+        <span class="auth">User</span>
+        <div class="description">Logout user</div>
+      </div>
+
+      <div class="tag" id="users">👥 Users</div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/users</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Get all users (with pagination)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/users/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Get user by ID</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/users/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Update user</div>
+        <div class="req-body">
+          <pre>
+{ "fname": "string", "lname": "string", "role": "user|admin", "isEmailVerified": boolean }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/users/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Delete user (soft delete)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/users/:id/restore</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Restore deleted user</div>
+      </div>
+
+      <div class="tag" id="categories">📁 Categories</div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/categories</span>
+        <span class="auth">Public</span>
+        <div class="description">Get all categories</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/categories/:id</span>
+        <span class="auth">Public</span>
+        <div class="description">Get category by ID</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/categories</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Create category</div>
+        <div class="req-body">
+          <pre>
+{ "name": "string", "description": "string", "image": "string", "parentCategory": "string" }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/categories/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Update category</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/categories/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Delete category (soft delete)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/categories/:id/restore</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Restore deleted category</div>
+      </div>
+
+      <div class="tag" id="products">📦 Products</div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/products</span>
+        <span class="auth">Public</span>
+        <div class="description">Get all products (with filters)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/products/:id</span>
+        <span class="auth">Public</span>
+        <div class="description">Get product by ID</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/products</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Create product</div>
+        <div class="req-body">
+          <pre>
+{ "name": "string", "description": "string", "price": number, "category": "string", "stock": number, "unit": "string", "images": string[] }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/products/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Update product</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/products/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Delete product (soft delete)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/products/:id/restore</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Restore deleted product</div>
+      </div>
+
+      <div class="tag" id="cart">🛒 Cart</div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/cart</span>
+        <span class="auth">User</span>
+        <div class="description">Get user's cart</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/cart</span>
+        <span class="auth">User</span>
+        <div class="description">Add item to cart</div>
+        <div class="req-body">
+          <pre>{ "productId": "string", "quantity": number }</pre>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/cart/:productId</span>
+        <span class="auth">User</span>
+        <div class="description">Update cart item quantity</div>
+        <div class="req-body"><pre>{ "quantity": number }</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/cart/:productId</span>
+        <span class="auth">User</span>
+        <div class="description">Remove item from cart</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/cart</span>
+        <span class="auth">User</span>
+        <div class="description">Clear entire cart</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/cart/all</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Get all carts</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/cart/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Get cart by ID</div>
+      </div>
+
+      <div class="tag" id="orders">📋 Orders</div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/orders</span>
+        <span class="auth">User</span>
+        <div class="description">Get user's orders</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method POST">POST</span>
+        <span class="path">/orders</span>
+        <span class="auth">User</span>
+        <div class="description">Create order from cart</div>
+        <div class="req-body">
+          <pre>
+{ "shippingAddress": { "street": "string", "city": "string", "pincode": "string" }, "paymentMethod": "string" }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/orders/:id</span>
+        <span class="auth">User/Admin</span>
+        <div class="description">
+          Get order by ID (User gets own, Admin gets any)
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/orders/:id/status</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Update order status</div>
+        <div class="req-body">
+          <pre>
+{ "orderStatus": "processing|shipped|delivered|cancelled", "paymentStatus": "pending|paid|failed|refunded" }</pre
+          >
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/orders/:id/payment-status</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Update payment status</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/orders/:id/cancel</span>
+        <span class="auth">User</span>
+        <div class="description">Cancel order</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method GET">GET</span>
+        <span class="path">/orders/all</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Get all orders</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method DELETE">DELETE</span>
+        <span class="path">/orders/:id</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Delete order (soft delete)</div>
+      </div>
+
+      <div class="endpoint">
+        <span class="method PUT">PUT</span>
+        <span class="path">/orders/:id/restore</span>
+        <span class="auth admin">Admin</span>
+        <div class="description">Restore deleted order</div>
+      </div>
+
+      <div
+        style="
+          margin-top: 40px;
+          padding: 20px;
+          background: #e8f5e9;
+          border-radius: 8px;
+        "
+      >
+        <h3 style="margin-bottom: 10px">🔑 Authentication</h3>
+        <p style="font-size: 14px; color: #666">
+          Include token in header: <code>Authorization: Bearer YOUR_TOKEN</code>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
