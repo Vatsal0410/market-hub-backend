@@ -14,15 +14,18 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 dotenv.config();
 
+const allowOrigins = [process.env.DEV_URL, process.env.PROD_URL].filter(
+  (origin): origin is string => origin !== undefined,
+);
+
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: allowOrigins,
   credentials: true,
-}
+};
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI =
-  process.env.MONGO_URI
+const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
