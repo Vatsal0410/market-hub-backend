@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createOrder, getUserOrders, getOrderById, getAllOrders, updateOrderStatus, cancelOrder, deleteOrder, restoreOrder, updatePaymentStatus } from "../controllers/orderController";
+import { createOrder, getUserOrders, getOrderById, getAllOrders, updateOrderStatus, cancelOrder, deleteOrder, restoreOrder, updatePaymentStatus, getOrderStats } from "../controllers/orderController";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { adminMiddleware } from "../middleware/adminMiddleware";
 import { validate } from "../middleware/validate";
@@ -12,6 +12,8 @@ router.post("/", authMiddleware, validate(createOrderValidation), createOrder);
 router.get("/", authMiddleware, getUserOrders);
 
 router.get("/all", authMiddleware, adminMiddleware, getAllOrders);
+
+router.get("/stats", authMiddleware, getOrderStats);
 
 router.get("/:id", authMiddleware, getOrderById);
 

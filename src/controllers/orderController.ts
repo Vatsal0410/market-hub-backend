@@ -81,10 +81,16 @@ export const restoreOrder = asyncHandler(async (req, res: Response) => {
 export const updatePaymentStatus = asyncHandler(async (req, res: Response) => {
   const { paymentStatus } = req.body;
   const order = await orderService.updateStatus(req.params.id as string, { paymentStatus });
-  
+
   if (!order) {
     throw new AppError("Order not found", 404);
   }
-  
+
   res.json({ success: true, message: "Payment status updated", data: order });
+});
+
+export const getOrderStats = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const isAdmin = req.user?.role === "admin";
+  const stats = await orderService.getStats(req.user?.id, isAdmin);
+  res.json({ success: true, data: stats });
 });

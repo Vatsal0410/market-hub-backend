@@ -22,6 +22,9 @@ export interface IOrder extends Document {
   paymentStatus: "pending" | "paid" | "failed" | "refunded";
   orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
   paymentMethod?: "COD" | "Card" | "UPI" | "NetBanking" | "Wallet";
+  orderId: string;
+  orderDate: Date;
+  deliveryDate?: Date;
   isDeleted: boolean;
   deletedAt?: Date;
 }
@@ -58,6 +61,9 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       enum: ["COD", "Card", "UPI", "NetBanking", "Wallet"],
     },
+    orderId: { type: String, required: true, unique: true, index: true },
+    orderDate: { type: Date, default: Date.now },
+    deliveryDate: { type: Date },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date },
   },

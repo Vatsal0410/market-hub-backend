@@ -56,17 +56,22 @@ const sendTokens = (
   accessToken: string,
   refreshToken: string,
 ) => {
-  res.cookie("refreshToken", refreshToken, {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  const commonOptions: any = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/"
+  };
+
+  res.cookie("refreshToken", refreshToken, {
+    ...commonOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
+    ...commonOptions,
     maxAge: 15 * 60 * 1000,
   });
 };

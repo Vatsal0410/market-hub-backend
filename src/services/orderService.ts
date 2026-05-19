@@ -22,10 +22,16 @@ interface UserOrderQuery {
   limit?: number;
 }
 
+const generateOrderId = (): string => {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `ORD-${timestamp}-${random}`;
+};
+
 export const orderService = {
   async create(data: CreateOrderData): Promise<IOrder> {
     const cart = await Cart.findOne({ user: data.userId }).populate("items.product", "name price images");
-    
+
     if (!cart || cart.items.length === 0) {
       throw new Error("Cart is empty");
     }
@@ -52,6 +58,8 @@ export const orderService = {
       totalAmount,
       shippingAddress: data.shippingAddress,
       paymentMethod: data.paymentMethod,
+      orderId: generateOrderId(),
+      orderDate: new Date(),
     });
 
     await Cart.findOneAndDelete({ user: data.userId });
@@ -102,9 +110,13 @@ export const orderService = {
   },
 
   async updateStatus(id: string, data: { orderStatus?: string; paymentStatus?: string }): Promise<IOrder | null> {
+    const updateData: Record<string, unknown> = { ...data };
+    if (data.orderStatus === "delivered") {
+      updateData.deliveryDate = new Date();
+    }
     return Order.findOneAndUpdate(
       { _id: id, isDeleted: false },
-      data,
+      updateData,
       { returnDocument: 'after' }
     );
   },
@@ -139,5 +151,38 @@ export const orderService = {
       { isDeleted: false, deletedAt: undefined },
       { returnDocument: 'after' }
     );
+  },
+
+  async getStats(userId?: string, isAdmin?: boolean): Promise<{
+    totalOrders: number;
+    totalRevenue: number;
+    pendingOrders: number;
+    shippedOrders: number;
+    deliveredOrders: number;
+    cancelledOrders: number;
+  }> {
+    const filter: Record<string, unknown> = { isDeleted: false };
+    if (!isAdmin && userId) {
+      filter.user = userId;
+    }
+
+    const totalOrders = await Order.countDocuments(filter);
+    const totalRevenue = await Order.aggregate([
+      { $match: { ...filter, paymentStatus: "paid" } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+    ]);
+    const pendingOrders = await Order.countDocuments({ ...filter, orderStatus: "processing" });
+    const shippedOrders = await Order.countDocuments({ ...filter, orderStatus: "shipped" });
+    const deliveredOrders = await Order.countDocuments({ ...filter, orderStatus: "delivered" });
+    const cancelledOrders = await Order.countDocuments({ ...filter, orderStatus: "cancelled" });
+
+    return {
+      totalOrders,
+      totalRevenue: totalRevenue[0]?.total || 0,
+      pendingOrders,
+      shippedOrders,
+      deliveredOrders,
+      cancelledOrders,
+    };
   },
 };
