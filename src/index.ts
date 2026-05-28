@@ -1,9 +1,10 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import path from "path";
+import multer from "multer";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
@@ -30,6 +31,19 @@ const MONGO_URI = process.env.MONGO_URI;
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ success: false, message: "File too large. Max size is 5MB" });
+    }
+    return res.status(400).json({ success: false, message: err.message });
+  }
+  if (err) {
+    return res.status(400).json({ success: false, message: err.message });
+  }
+});
 
 app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", message: "Backend is running" });

@@ -4,3 +4,5 @@ dist/
 scripts/
 
 .env
+
+/uploads/

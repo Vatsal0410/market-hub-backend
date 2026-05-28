@@ -1,4 +1,4 @@
-import { Product, IProduct } from "../models/Product";
+import { Product, IProduct, IProductImage } from "../models/Product";
 
 interface ProductQuery {
   category?: string;
@@ -14,7 +14,7 @@ export const productService = {
     name: string;
     description?: string;
     price: number;
-    images?: string[];
+    images?: IProductImage[];
     category?: string;
     stock?: number;
     unit: string;
@@ -54,7 +54,7 @@ export const productService = {
     name: string;
     description: string;
     price: number;
-    images: string[];
+    images: IProductImage[];
     category: string;
     stock: number;
     unit: string;
@@ -89,5 +89,21 @@ export const productService = {
       { $inc: { stock: quantity } },
       { returnDocument: 'after' }
     );
+  },
+
+  async addImages(id: string, newImages: IProductImage[]): Promise<IProduct | null> {
+    return Product.findOneAndUpdate(
+      { _id: id, isDeleted: false },
+      { $push: { images: { $each: newImages } } },
+      { returnDocument: 'after' }
+    ).populate("category", "name");
+  },
+
+  async removeImage(id: string, filename: string): Promise<IProduct | null> {
+    return Product.findOneAndUpdate(
+      { _id: id, isDeleted: false },
+      { $pull: { images: { filename } } },
+      { returnDocument: 'after' }
+    ).populate("category", "name");
   },
 };
